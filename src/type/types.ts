@@ -36,9 +36,11 @@ export type Person = {
 
 
 export interface RoundData {
-    round1: number[] | undefined;
-    round2: number[] | undefined;
-    round3: number[] | undefined;
+    round1?: number[] | undefined;
+    round2?: number[] | undefined;
+    round3?: number[] | undefined;
+    memdata?: Status|undefined
+    otherStatus?: { hua: number; mu: number }| undefined;
 }
 
   

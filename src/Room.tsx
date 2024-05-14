@@ -100,7 +100,7 @@ function App() {
   const startGame = () => {
     alert('開始動作')
     // 隨機排列生肖
-    const zodiacs = ["鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"];
+    const zodiacs = ["鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊", "猴", "雞", "狗", "豬"];
     for (let i = zodiacs.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [zodiacs[i], zodiacs[j]] = [zodiacs[j], zodiacs[i]];
@@ -119,7 +119,7 @@ function App() {
         randomIndices.add(randomIndex);
       }
       randomIndices.forEach((index) => {
-        group[index] += "A";
+        group[index] += "真";
       });
       console.log('此處需為輪次資料', group);
       return group;
