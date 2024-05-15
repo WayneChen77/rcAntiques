@@ -1,4 +1,5 @@
 import { ChangeEvent, useState, useEffect } from 'react';
+import React from 'react';
 import { json, useParams } from 'react-router-dom';
 // import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js';
 import { ref, set, update, onValue } from 'firebase/database';
@@ -90,17 +91,34 @@ const GameComponent = () => {
       console.log('dad', data)
       setLookData(data)
       let aa = Looktxt + Rounddata[idx]
-    
 
-      if ((userData?.name == '黃嫣嫣' && otherStatus!.hua==roun) || userData?.name == '木戶家奈' && (otherStatus!.mu==roun)) {
+
+      if ((userData?.name == '黃嫣嫣' && otherStatus!.hua == roun) || userData?.name == '木戶家奈' && (otherStatus!.mu == roun)) {
         // otherStatus
-        setLooktxt('???')
+        setLooktxt('鑑定結果為無法鑑定')
       }
-      else{
+      else {
         setLooktxt(aa)
       }
 
-    
+
+    }
+
+  }
+  //技能欄位
+  const updateAtValue = (ele: string) => {
+    if (ele == 'chg') {
+      if (Alldata?.memstaus?.chg) {
+        Alldata.memstaus.chg.at = Rounddata.length;
+      }
+
+    }
+
+    if (ele == 'r') {
+      if (Alldata?.memstaus?.r) {
+        Alldata.memstaus.r.at = Rounddata.length;
+      }
+
     }
 
   }
@@ -161,6 +179,58 @@ const GameComponent = () => {
             ) : (
               <span>{Looktxt}</span>
             )}
+            {/* 技能 */}
+            {/* && userData?.name === '鄭國渠' */}
+            {!Alldata?.memstaus?.chg.at  ?
+
+              <span>
+                <input type="checkbox" id="toggle2" className="toggle-checkbox" />
+                <label htmlFor="toggle2">使用技能</label>
+                <div className="toggle-content">
+                  {Array.isArray(Rounddata) ? (
+                    Rounddata.map((idm) => (
+                      <React.Fragment key={idm}>
+                        <input id={idm[0]} type="radio" value=''></input>
+                        <label htmlFor={idm[0]}>{idm[0]}</label></React.Fragment>
+                    ))
+                  ) : (
+                    ''
+                  )}
+
+                </div>
+
+                <span>確定<input type="checkbox"
+
+                  onClick={() => updateAtValue('chg')}
+                /></span>
+                : ''
+              </span> : ''
+
+            }
+
+
+            {/* && userData?.name === '藥不然' */}
+            {!Alldata?.memstaus?.yai.at ?
+              <span>
+                <input type="checkbox" id="toggle" className="toggle-checkbox" />
+                <label htmlFor="toggle">使用技能</label>
+                <div className="toggle-content">
+                  {Array.isArray(Alldata?.memdata) ? (
+                    Alldata.memdata.map((co, idx) => (
+                      <React.Fragment key={`at${co.idx}`}>
+                        <input id={co.color} type="radio" value=''></input>
+                        <label htmlFor={co.color}>{co.admname + co.color}</label></React.Fragment>
+                    ))
+                  ) : (
+                    ''
+                  )}
+
+                </div>
+              </span>
+              : ''}
+            {!Alldata?.memstaus?.r.at && userData?.name === '老嘲諷' ?
+              <span>使用技能<input type="checkbox" onClick={() => updateAtValue('r')} /></span>
+              : ''}
 
 
 
@@ -169,9 +239,11 @@ const GameComponent = () => {
           <p>等待 {currentPlayerID} 操作...</p>
         </>
 
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
+
 
 export default GameComponent;

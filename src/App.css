@@ -1,0 +1,27 @@
+/* 隐藏默认的checkbox */
+.toggle-checkbox {
+    display: none;
+}
+
+/* 创建自定义的复选框样式 */
+.toggle-checkbox+label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 创建自定义的内容区域 */
+.toggle-content {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 当复选框被选中时，显示内容 */
+.toggle-checkbox:checked+label+.toggle-content {
+    display: block;
+}

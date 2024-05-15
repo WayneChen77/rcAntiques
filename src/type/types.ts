@@ -41,6 +41,7 @@ export interface RoundData {
     round3?: number[] | undefined;
     memdata?: Status|undefined
     otherStatus?: { hua: number; mu: number }| undefined;
+    memstaus?:Status
 }
 
   
