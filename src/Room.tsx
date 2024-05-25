@@ -54,6 +54,8 @@ function App() {
   const navigate = useNavigate();
   const [people, setPeople] = useState(initialPeople);
 
+  const [forceUpdate, setForceUpdate] = useState(false); // 添加一個用於強制更新的狀態
+
   const [adm, setadm] = useState('請輸入姓名');
   // const [selectobj, setselectobj] = useState({});
   const [selectobj, setselectobj] = useState<Person | null>(null);
@@ -62,8 +64,12 @@ function App() {
 
 
   const selectmem = (idx: number) => {
-    //若有人選過 不能用初始資料
-    const updatedPeople = [...initialPeople]; // 取得初始值
+    //纖纖重製當前值 然後才寫入
+    
+    //若有人選過 不能用初始資料 此處用深拷貝
+    const updatedPeople = JSON.parse(JSON.stringify(people)); // 取得初始值
+
+    
     if (!adm) {
       setadm('無名玩家')
     }
@@ -75,7 +81,8 @@ function App() {
     if (selectobj && selectobj.idx != undefined) {
       console.log('問題點以選的', people[selectobj.idx])
       console.log('改的取消直', updatedPeople[selectobj.idx])
-      people[selectobj.idx] = updatedPeople[selectobj.idx]
+      people[selectobj.idx].admname ='' 
+      
     }
 
 
@@ -84,18 +91,20 @@ function App() {
 
     // updatedPeople[idx].admname = adm || '無名玩家'; // 更新副本中的值
     // updatedPeople[idx].name = Selectename;
+   
     people[idx].admname = adm || '無名玩家'; // 更新副本中的值
-    people[idx].name = Selectename;
+    // people[idx].name = Selectename;
     //此處需判定若原有選擇 將原有資料清掉 
-
+    console.log('沒進來',people[idx],adm)
 
     setPeople(people); // 将更新寫入
     setselectobj(people[idx]) //寫入當前使用者角色資料
+    setForceUpdate(prevState => !prevState);
   }
-  const [Selectename, setSelectename] = useState('黃嫣嫣');
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectename(event.target.value);
-  };
+  // const [Selectename, setSelectename] = useState('黃嫣嫣');
+  // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectename(event.target.value);
+  // };
   //開始遊戲 
   const startGame = () => {
     alert('開始動作')
@@ -240,6 +249,19 @@ function App() {
       if (data == null) { // 检查数据是否不存在
         console.log('無資料 寫入資料');
         try {
+          colors
+          people 
+          // 此處將資料寫入隨機寫入 20240525更新
+          for (let i = colors.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [colors[i], colors[j]] = [colors[j], colors[i]];
+          }
+          console.log('隨機排列',colors)
+          colors.forEach((element, index) => {
+            people[index].name = element;
+          });
+          console.log('被改變的people')
+          // return false
           // 
           await set(playpeopleRef, {
             // name: {'aa':'53'},
@@ -284,8 +306,8 @@ function App() {
     };
   }, []);  // 空依赖数组意味着这个 effect 只在组件加载时运行一次
   useEffect(() => {
-    console.log('selectobj 状态更新后的值：', selectobj);
-  }, [selectobj])
+    console.log('selectobj 状态更新后的值：', selectobj,people);
+  }, [selectobj,people])
   return (
     <>
       房間資料
@@ -293,13 +315,13 @@ function App() {
       <br />
       <label htmlFor="adm"> 姓名:  <input id='adm' name='adm' type="text" value={adm} onChange={(e) => setadm(e.target.value)} /></label>
       <br />
-      <label htmlFor="name"> 角色:
+      {/* <label htmlFor="name"> 角色:
 
         <select name="name" id="name" onChange={handleSelectChange} value={Selectename}>
           {colors.map((co, idx) => (
             <option value={co} key={idx} style={{ background: co }}>{co}</option>
           ))}
-        </select></label>
+        </select></label> */}
       <br />
 
 
