@@ -4,6 +4,7 @@ export type Person = {
     admname: string;
     name: string;
     color: string;
+    colore: string;
     q: boolean;
     r: boolean;
     atked: boolean;

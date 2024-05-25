@@ -1,8 +1,8 @@
 // import { useState } from 'react'
 import { ChangeEvent, useState, useEffect } from 'react';
-import { json, useParams,useNavigate } from 'react-router-dom';
+import { json, useParams, useNavigate } from 'react-router-dom';
 // import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js';
-import {ref, set, update, onValue } from 'firebase/database';
+import { ref, set, update, onValue } from 'firebase/database';
 import { db } from './tscom/firebase-config'; // Adjust the path as necessary
 
 import { getFromLocalStorage, setToLocalStorage } from './tscom/localStorageUtils';
@@ -37,18 +37,18 @@ import { Person, Status } from './type/types';
 
 function App() {
 
-  
+
 
   //此處後先所
   let initialPeople: Person[] = [
-    { idx: 0, admname: '黑色', name: '', color: 'gray', q: false, r: false, atked: false, locked: false },
-    { idx: 1, admname: '白色', name: '', color: 'white', q: false, r: false, atked: false, locked: false },
-    { idx: 2, admname: '藍色', name: '', color: 'blue', q: false, r: false, atked: false, locked: true },
-    { idx: 3, admname: '紫色', name: '', color: 'purple', q: false, r: false, atked: false, locked: true },
-    { idx: 4, admname: '綠色', name: '', color: 'green', q: false, r: false, atked: false, locked: true },
-    { idx: 5, admname: '紅色', name: '', color: 'red', q: false, r: false, atked: false, locked: true },
-    { idx: 6, admname: '橘色', name: '', color: 'orange', q: false, r: false, atked: false, locked: true },
-    { idx: 7, admname: '黃色', name: '', color: 'yellow', q: false, r: false, atked: false, locked: true }
+    { idx: 0, admname: '黑色', name: '', color: '灰',colore:'gray', q: false, r: false, atked: false, locked: false },
+    { idx: 1, admname: '白色', name: '', color: '白',colore:'white', q: false, r: false, atked: false, locked: false },
+    { idx: 2, admname: '藍色', name: '', color: '藍',colore:'blue', q: false, r: false, atked: false, locked: true },
+    { idx: 3, admname: '紫色', name: '', color: '紫',colore:'purple', q: false, r: false, atked: false, locked: true },
+    { idx: 4, admname: '綠色', name: '', color: '綠',colore:'green', q: false, r: false, atked: false, locked: true },
+    { idx: 5, admname: '紅色', name: '', color: '紅',colore:'red', q: false, r: false, atked: false, locked: true },
+    { idx: 6, admname: '橘色', name: '', color: '橘',colore:'orange', q: false, r: false, atked: false, locked: true },
+    { idx: 7, admname: '黃色', name: '', color: '黃',colore:'yellow', q: false, r: false, atked: false, locked: true }
   ];
   let colors: string[] = ['許願', '方震', '黃嫣嫣', '木戶家奈', '老嘲諷', '藥不然', '鄭國渠', '姬浮雲']
   const navigate = useNavigate();
@@ -65,11 +65,11 @@ function App() {
 
   const selectmem = (idx: number) => {
     //纖纖重製當前值 然後才寫入
-    
+
     //若有人選過 不能用初始資料 此處用深拷貝
     const updatedPeople = JSON.parse(JSON.stringify(people)); // 取得初始值
 
-    
+
     if (!adm) {
       setadm('無名玩家')
     }
@@ -81,8 +81,8 @@ function App() {
     if (selectobj && selectobj.idx != undefined) {
       console.log('問題點以選的', people[selectobj.idx])
       console.log('改的取消直', updatedPeople[selectobj.idx])
-      people[selectobj.idx].admname ='' 
-      
+      people[selectobj.idx].admname = ''
+
     }
 
 
@@ -91,11 +91,11 @@ function App() {
 
     // updatedPeople[idx].admname = adm || '無名玩家'; // 更新副本中的值
     // updatedPeople[idx].name = Selectename;
-   
+
     people[idx].admname = adm || '無名玩家'; // 更新副本中的值
     // people[idx].name = Selectename;
     //此處需判定若原有選擇 將原有資料清掉 
-    console.log('沒進來',people[idx],adm)
+    console.log('沒進來', people[idx], adm)
 
     setPeople(people); // 将更新寫入
     setselectobj(people[idx]) //寫入當前使用者角色資料
@@ -108,8 +108,19 @@ function App() {
   //開始遊戲 
   const startGame = () => {
     alert('開始動作')
-    // 隨機排列生肖
-    const zodiacs = ["鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊", "猴", "雞", "狗", "豬"];
+    // 隨機排列生肖 是否須改架構
+    const zodiacs = [{ zod: "鼠", tf: false },
+    { zod: "牛", tf: false },
+    { zod: "虎", tf: false },
+    { zod: "兔", tf: false },
+    { zod: "龍", tf: false },
+    { zod: "蛇", tf: false },
+    { zod: "馬", tf: false },
+    { zod: "羊", tf: false },
+    { zod: "猴", tf: false },
+    { zod: "雞", tf: false },
+    { zod: "狗", tf: false },
+    { zod: "豬", tf: false }];
     for (let i = zodiacs.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [zodiacs[i], zodiacs[j]] = [zodiacs[j], zodiacs[i]];
@@ -128,16 +139,35 @@ function App() {
         randomIndices.add(randomIndex);
       }
       randomIndices.forEach((index) => {
-        group[index] += "真";
+        group[index].tf = true;
       });
       console.log('此處需為輪次資料', group);
       return group;
     });
     //           nonEmptyAdmnames這東西要最後一次寫入data
-    const startNumber = Math.floor(Math.random() * people.length); //選擇起始顏色位置 
-    console.log('起始顏色', startNumber, people, people[startNumber].color)
-    console.log('全部', result)
-    // return false
+    // const startNumber = Math.floor(Math.random() * people.length); //選擇起始顏色位置 
+    //此處是否不要用idx 直接用顏色 &需寫入其他未選定腳色
+
+
+    // 從 people 數組中隨機選擇一個值
+    const randomIndex = Math.floor(Math.random() * people.length);
+    const startColor = people[randomIndex].color;
+    // 從原始數組中刪除選擇的值
+    const remainingColors = [...people.slice(0, randomIndex), ...people.slice(randomIndex + 1)].map(ele=>ele.color)
+
+    console.log('隨機選擇的值：', startColor);
+    console.log('剩餘的值：', remainingColors);
+
+
+
+
+
+
+
+    // console.log('起始顏色', startNumber, people, people[startNumber].color)
+    // console.log('全部', result)
+
+   
     //此處先寫入直 再撈出
     //開始寫入輪次 這邊動作完就換人 應不需等待 此處應只需寫入idx或顏色判斷即可 不須寫其他資料?
     //使用狀態 是否分開寫?
@@ -154,16 +184,17 @@ function App() {
       mu: Math.floor(Math.random() * 3) + 1
     };
     // let otherStatus: { hua: number; mu: number } = { hua: 0, mu: 2 };
-    let round1: number[] = [startNumber]
+    // return false
+    let round1: string[] = [startColor]
     update(playpeopleRef, {
       round1: round1,
       memstaus: memstatus,
       otherStatus: otherStatus,
-      rounddata:result,
-      startgame:true
+      rounddata: result,
+      startgame: true
     });
 
-
+    // return false
     navigate(`/GamePlay/${roomId}`);
     // <Route path="/GamePlay/:roomId" element={<GamePlay />} />
 
@@ -250,13 +281,13 @@ function App() {
         console.log('無資料 寫入資料');
         try {
           colors
-          people 
+          people
           // 此處將資料寫入隨機寫入 20240525更新
           for (let i = colors.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [colors[i], colors[j]] = [colors[j], colors[i]];
           }
-          console.log('隨機排列',colors)
+          console.log('隨機排列', colors)
           colors.forEach((element, index) => {
             people[index].name = element;
           });
@@ -282,13 +313,13 @@ function App() {
         console.log('這邊要把資料篩掉 應判定陣列有值 是否換頁面:', data.round1);
 
         //如判定道已開始 直接轉址
-        console.log('沒反應',data.startgame)
-        if(
-        data.startgame) navigate(`/GamePlay/${roomId}`);
+        console.log('沒反應', data.startgame)
+        if (
+          data.startgame) navigate(`/GamePlay/${roomId}`);
         //此處應以開始遊戲 換頁設定妥當
         setPeople(data.memdata)
         const userData = getFromLocalStorage<Person>('userdata');
-        
+
         console.log('若以創立則data為', userData)
         if (!!userData) setselectobj(userData)
         console.log(typeof selectobj)
@@ -306,8 +337,8 @@ function App() {
     };
   }, []);  // 空依赖数组意味着这个 effect 只在组件加载时运行一次
   useEffect(() => {
-    console.log('selectobj 状态更新后的值：', selectobj,people);
-  }, [selectobj,people])
+    console.log('selectobj 状态更新后的值：', selectobj, people);
+  }, [selectobj, people])
   return (
     <>
       房間資料
@@ -328,7 +359,7 @@ function App() {
       <div className="row">
 
         {people.map((person, index) => (
-          <div className='col-3 text-center py-3' key={person.color} style={{ background: person.color }}
+          <div className='col-3 text-center py-3' key={person.color} style={{ background: person.colore }}
             onClick={() => { if ((!selectobj && !person.locked) || (selectobj && !selectobj.locked && !person.locked)) selectmem(index); }}
 
           // onClick={() => selectmem(index)}

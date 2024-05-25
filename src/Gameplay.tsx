@@ -50,10 +50,13 @@ const GameComponent = () => {
       console.log('位置狀態', round1)
       console.log('當前本地', userData)
       let round = round1 || []
-      console.log('問題', round[round.length - 1] == userData?.idx)
+      console.log('為什麼',round)
+      console.log('問題', round[round.length - 1] , userData?.color)
       //此處看到一定會FALSE 因isCurrentUserTurn當下未更新 當不影響 因最後會被USEEFFECT更新
-      setIsCurrentUserTurn(round[round.length - 1] == userData?.idx); //判定當前使用者
-      console.log('當前可作人員', round[round.length - 1], userData?.idx, isCurrentUserTurn, '此時判定還會是FALSE 因還沒更新')
+      // setIsCurrentUserTurn(round[round.length - 1] == userData?.color); //判定當前使用者
+      setIsCurrentUserTurn(round[round.length - 1].toString() == userData?.color);
+// 
+      console.log('當前可作人員', round[round.length - 1], userData?.color, isCurrentUserTurn, '此時判定還會是FALSE 因還沒更新')
       //寫入一 個當前人員顯示
       let col: string | null = userData!.color
       setCurrentPlayerID(col)
